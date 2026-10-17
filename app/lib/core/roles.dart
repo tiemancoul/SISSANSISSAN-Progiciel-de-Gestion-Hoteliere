@@ -38,6 +38,14 @@ enum AppRole {
 
   bool get canManageUsers => canEditCatalog;
 
+  /// Encaissements et caisse (droits identiques à `record_payment`).
+  bool get canHandleCash =>
+      canManageGuests || this == caissier || this == restaurantBar;
+
+  /// Lecture des factures et paiements.
+  bool get canViewFinance =>
+      canHandleCash || this == comptable || this == auditeur;
+
   /// Blocage de chambres par période (travaux, maintenance).
   bool get canManageBlocks =>
       canEditCatalog || this == gerant || this == maintenance;

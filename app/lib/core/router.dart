@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/login_screen.dart';
+import '../features/billing/cash_screen.dart';
+import '../features/billing/invoice_screen.dart';
+import '../features/billing/invoices_screen.dart';
 import '../features/reservations/calendar_screen.dart';
 import '../features/reservations/guests_screen.dart';
 import '../features/reservations/reservations_screen.dart';
@@ -45,6 +48,18 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (_, _) => const CalendarScreen(),
           ),
           GoRoute(path: '/clients', builder: (_, _) => const GuestsScreen()),
+          GoRoute(
+            path: '/factures',
+            builder: (_, _) => const InvoicesScreen(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (_, state) =>
+                    InvoiceScreen(id: state.pathParameters['id']!),
+              ),
+            ],
+          ),
+          GoRoute(path: '/caisse', builder: (_, _) => const CashScreen()),
           GoRoute(path: '/chambres', builder: (_, _) => const RoomsScreen()),
           GoRoute(
             path: '/utilisateurs',

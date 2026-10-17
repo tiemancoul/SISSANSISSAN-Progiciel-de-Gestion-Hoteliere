@@ -18,8 +18,17 @@ journal d'audit automatique, clients, réservations (double réservation impossi
 arrivée et départ avec mise à jour de l'état des chambres, calendrier d'occupation sur deux semaines,
 blocages de chambres par période (incompatibles avec une réservation confirmée).
 
-Pas encore fait : téléversement du logo, tarifs saisonniers, association équipements ↔ catégories,
-factures, paiements, caisse et impressions (lot 2).
+## État du lot 2 (finances)
+
+Fait : factures (depuis une réservation ou client de passage), taxes calculées et figées à la validation,
+numérotation annuelle sans trou (F2026-00001), paiements multi-devises au taux figé, monnaie rendue,
+protection contre les doubles paiements, remboursements réservés à la direction, annulation motivée,
+sessions de caisse avec écart à la clôture.
+
+Arrondi : chaque montant est arrondi au nombre de décimales de la devise de la facture (0 pour le XOF),
+au demi supérieur.
+
+Pas encore fait : impressions A4 / A5 et reçus, avoirs, téléversement du logo, tarifs saisonniers.
 
 ## Mise en place de Supabase
 
