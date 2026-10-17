@@ -65,6 +65,8 @@ do $$ begin
     raise exception 'ÉCHEC conversion %', (select amount_invoice from public.payments where currency = 'EUR'); end if;
   if (select balance from public.invoice_balances where invoice_id = (select inv from t)) <> 17202 then
     raise exception 'ÉCHEC solde'; end if;
+  if (select balance_after from public.payments where currency = 'EUR') <> 17202 then
+    raise exception 'ÉCHEC solde figé sur le paiement'; end if;
   perform public.record_payment((select inv from t), 20000, 'XOF', 'carte', gen_random_uuid());
   raise exception 'ÉCHEC paiement supérieur au solde';
 exception when check_violation then null;
@@ -90,6 +92,8 @@ select public.record_payment((select inv from t), 5000, 'XOF', 'carte', gen_rand
 do $$ begin
   if (select balance from public.invoice_balances where invoice_id = (select inv from t)) <> 22202 then
     raise exception 'ÉCHEC solde après remboursement'; end if;
+  if (select balance_after from public.payments where kind = 'remboursement') <> 22202 then
+    raise exception 'ÉCHEC solde figé sur le remboursement'; end if;
 end $$;
 update public.invoices set status = 'annulee', cancelled_reason = 'Erreur de chambre' where id = (select inv from t);
 select pg_temp.expect_denied($$update public.invoices set cancelled_reason = 'autre' where id = (select inv from t)$$, 'modification d''une facture annulée');

@@ -231,6 +231,7 @@ create table public.payments (
   currency char(3) not null,
   rate numeric(18,8) not null,                    -- vers la devise de la facture, figé
   amount_invoice numeric(14,2) not null,          -- contre-valeur en devise de facture
+  balance_after numeric(14,2) not null,           -- solde dû juste après, pour le reçu
   cash_received numeric(14,2),
   change_given numeric(14,2),
   reference text,
@@ -311,8 +312,9 @@ begin
   end if;
 
   insert into public.payments (hotel_id, invoice_id, kind, method, amount, currency, rate, amount_invoice,
-                               cash_received, change_given, reference, cash_session_id, idempotency_key)
+                               balance_after, cash_received, change_given, reference, cash_session_id, idempotency_key)
     values (inv.hotel_id, inv.id, kind, method, amount, currency, r, amt_inv,
+            case kind when 'paiement' then bal - amt_inv else bal + amt_inv end,
             cash_received, change, reference, session, record_payment.idempotency_key)
     on conflict on constraint payments_idempotency_key_key do nothing
     returning id into existing;
