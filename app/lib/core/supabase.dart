@@ -53,11 +53,15 @@ final profileProvider = FutureProvider<Profile?>((ref) async {
 String errorText(Object e) => switch (e) {
   PostgrestException(code: '42501') => 'Action non autorisée pour votre rôle.',
   PostgrestException(code: '23505') => 'Cette valeur existe déjà.',
+  PostgrestException(code: '23P01', :final message)
+      when message.contains('bloquée') || message.contains('existent') =>
+    message,
   PostgrestException(code: '23P01') =>
-    'Cette chambre est déjà réservée sur ces dates.',
+    'Cette chambre est déjà réservée ou bloquée sur ces dates.',
   PostgrestException(code: '23514', :final message)
-      when message.contains('reservations_check') =>
-    'La date de départ doit être après la date d\'arrivée.',
+      when message.contains('reservations_check') ||
+          message.contains('room_blocks_check') =>
+    'La date de fin doit être après la date de début.',
   PostgrestException(:final message) => message,
   AuthException(:final message) => message,
   _ => 'Erreur inattendue : $e',

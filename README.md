@@ -15,10 +15,11 @@ Le cahier des charges de référence est la version 1.1 (section 18 : décisions
 Fait : connexion et mot de passe oublié, 11 rôles, attribution des rôles, identité de l'hôtel,
 règles de séjour, devises et taux, taxes, catégories, chambres, salles de conférence, équipements,
 journal d'audit automatique, clients, réservations (double réservation impossible côté base),
-arrivée et départ avec mise à jour de l'état des chambres.
+arrivée et départ avec mise à jour de l'état des chambres, calendrier d'occupation sur deux semaines,
+blocages de chambres par période (incompatibles avec une réservation confirmée).
 
 Pas encore fait : téléversement du logo, tarifs saisonniers, association équipements ↔ catégories,
-calendrier de disponibilité, blocages de chambres par période, puis factures, paiements et caisse.
+factures, paiements, caisse et impressions (lot 2).
 
 ## Mise en place de Supabase
 

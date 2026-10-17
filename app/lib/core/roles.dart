@@ -38,6 +38,10 @@ enum AppRole {
 
   bool get canManageUsers => canEditCatalog;
 
+  /// Blocage de chambres par période (travaux, maintenance).
+  bool get canManageBlocks =>
+      canEditCatalog || this == gerant || this == maintenance;
+
   /// Clients, réservations, arrivées et départs.
   bool get canManageGuests =>
       canEditCatalog || this == gerant || this == reception;

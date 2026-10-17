@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/login_screen.dart';
+import '../features/reservations/calendar_screen.dart';
 import '../features/reservations/guests_screen.dart';
 import '../features/reservations/reservations_screen.dart';
 import '../features/rooms/rooms_screen.dart';
@@ -38,6 +39,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/reservations',
             builder: (_, _) => const ReservationsScreen(),
+          ),
+          GoRoute(
+            path: '/calendrier',
+            builder: (_, _) => const CalendarScreen(),
           ),
           GoRoute(path: '/clients', builder: (_, _) => const GuestsScreen()),
           GoRoute(path: '/chambres', builder: (_, _) => const RoomsScreen()),
