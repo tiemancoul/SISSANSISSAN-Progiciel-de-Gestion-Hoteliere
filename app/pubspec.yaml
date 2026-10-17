@@ -39,6 +39,7 @@ dependencies:
   go_router: ^18.1.0
   flutter_localizations:
     sdk: flutter
+  uuid: ^4.6.0
 
 dev_dependencies:
   flutter_test:

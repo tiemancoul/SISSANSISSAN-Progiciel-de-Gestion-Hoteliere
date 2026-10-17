@@ -39,4 +39,18 @@ void main() {
     expect(AppRole.superAdmin.assignableRoles, contains(AppRole.superAdmin));
     expect(AppRole.reception.assignableRoles, isEmpty);
   });
+
+  test('caisse et lecture des factures', () {
+    expect(AppRole.values.where((r) => r.canHandleCash), [
+      AppRole.superAdmin,
+      AppRole.admin,
+      AppRole.gerant,
+      AppRole.reception,
+      AppRole.caissier,
+      AppRole.restaurantBar,
+    ]);
+    expect(AppRole.comptable.canViewFinance, isTrue);
+    expect(AppRole.comptable.canHandleCash, isFalse);
+    expect(AppRole.entretien.canViewFinance, isFalse);
+  });
 }

@@ -32,6 +32,18 @@ final _destinations = [
     Icons.person_outline,
     (r) => r.canManageGuests,
   ),
+  _Destination(
+    '/factures',
+    'Factures',
+    Icons.receipt_long_outlined,
+    (r) => r.canViewFinance,
+  ),
+  _Destination(
+    '/caisse',
+    'Caisse',
+    Icons.point_of_sale_outlined,
+    (r) => r.canHandleCash,
+  ),
   _Destination('/chambres', 'Chambres', Icons.bed_outlined, (_) => true),
   _Destination(
     '/utilisateurs',
@@ -108,14 +120,22 @@ class HomeShell extends ConsumerWidget {
                   ],
                 )
               : child,
-          bottomNavigationBar: wide
+          // Trop d'entrées pour une barre du bas : tiroir sur écran étroit.
+          drawer: wide
               ? null
-              : NavigationBar(
+              : NavigationDrawer(
                   selectedIndex: index,
-                  onDestinationSelected: go,
-                  destinations: [
+                  onDestinationSelected: (i) {
+                    Navigator.pop(context);
+                    go(i);
+                  },
+                  children: [
+                    const SizedBox(height: 16),
                     for (final d in items)
-                      NavigationDestination(icon: Icon(d.icon), label: d.label),
+                      NavigationDrawerDestination(
+                        icon: Icon(d.icon),
+                        label: Text(d.label),
+                      ),
                   ],
                 ),
         );
