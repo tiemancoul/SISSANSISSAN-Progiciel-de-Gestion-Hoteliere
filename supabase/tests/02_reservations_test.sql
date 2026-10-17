@@ -26,12 +26,6 @@ do $$ begin
 end $$;
 
 -- 2. Double réservation refusée, chevauchement partiel compris ; dates contiguës acceptées
-create function pg_temp.book(d1 int, d2 int, st text default 'confirmee') returns void language sql as $$
-  insert into public.reservations (hotel_id, guest_id, room_id, check_in, check_out, status)
-  select '10000000-0000-0000-0000-000000000000', '30000000-0000-0000-0000-000000000000', id,
-         current_date + d1, current_date + d2, st::public.reservation_status
-  from public.rooms where number = '101';
-$$;
 do $$ begin
   perform pg_temp.book(2, 5);
   raise exception 'ÉCHEC double réservation acceptée';

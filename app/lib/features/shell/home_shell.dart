@@ -21,6 +21,12 @@ final _destinations = [
     (_) => true,
   ),
   _Destination(
+    '/calendrier',
+    'Calendrier',
+    Icons.calendar_month_outlined,
+    (_) => true,
+  ),
+  _Destination(
     '/clients',
     'Clients',
     Icons.person_outline,
