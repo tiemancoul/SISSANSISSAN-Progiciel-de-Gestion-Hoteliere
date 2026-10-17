@@ -32,6 +32,11 @@ class ChoiceField extends Field {
   final Map<String, String> options;
 }
 
+/// Date seule, stockée au format AAAA-MM-JJ.
+class DateField extends Field {
+  const DateField(super.key, super.label, {super.required});
+}
+
 class BoolField extends Field {
   const BoolField(super.key, super.label) : super(required: false);
 }
@@ -151,6 +156,34 @@ class _EditDialogState extends State<_EditDialog> {
         ],
         validator: (v) => validateField(f, v),
         onChanged: (v) => _values[f.key] = v,
+      ),
+      DateField() => FormField<String>(
+        initialValue: _values[f.key] as String?,
+        validator: (v) => validateField(f, v),
+        builder: (state) => InkWell(
+          onTap: () async {
+            final initial =
+                DateTime.tryParse(state.value ?? '') ?? DateTime.now();
+            final picked = await showDatePicker(
+              context: context,
+              initialDate: initial,
+              firstDate: DateTime(2020),
+              lastDate: DateTime(2100),
+            );
+            if (picked == null) return;
+            final v = picked.toIso8601String().substring(0, 10);
+            state.didChange(v);
+            _values[f.key] = v;
+          },
+          child: InputDecorator(
+            decoration: InputDecoration(
+              labelText: f.label,
+              errorText: state.errorText,
+              suffixIcon: const Icon(Icons.calendar_today_outlined),
+            ),
+            child: Text(state.value ?? ''),
+          ),
+        ),
       ),
       NumberField() || TextInput() => TextFormField(
         initialValue: _values[f.key] as String?,

@@ -14,6 +14,18 @@ class _Destination {
 }
 
 final _destinations = [
+  _Destination(
+    '/reservations',
+    'Réservations',
+    Icons.event_outlined,
+    (_) => true,
+  ),
+  _Destination(
+    '/clients',
+    'Clients',
+    Icons.person_outline,
+    (r) => r.canManageGuests,
+  ),
   _Destination('/chambres', 'Chambres', Icons.bed_outlined, (_) => true),
   _Destination(
     '/utilisateurs',
