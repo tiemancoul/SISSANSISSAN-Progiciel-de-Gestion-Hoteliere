@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:printing/printing.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../core/edit_dialog.dart';
 import '../../core/supabase.dart';
 import '../../core/table_data.dart';
+import '../reservations/guests_screen.dart';
+import 'documents.dart';
 import 'invoices_screen.dart';
 
 const paymentMethods = {
@@ -204,6 +207,60 @@ class InvoiceScreen extends ConsumerWidget {
             );
           }
 
+          Future<void> printDoc({DbRow? payment}) async {
+            final format = await showEditDialog(
+              context,
+              title: payment == null
+                  ? 'Imprimer la facture'
+                  : 'Imprimer le reçu',
+              initial: {'format': payment == null ? 'A4' : 'A5'},
+              fields: const [
+                ChoiceField('format', 'Format', {'A4': 'A4', 'A5': 'A5'}),
+              ],
+            );
+            if (format == null) return;
+            await run(() async {
+              final hotel = (await ref.read(
+                rowsProvider(('hotels', 'name')).future,
+              )).first;
+              final settings = await ref.read(
+                rowsProvider(('hotel_settings', 'hotel_id')).future,
+              );
+              final guest = inv['guest_id'] == null
+                  ? null
+                  : (await ref.read(rowsProvider(guestsQuery).future))
+                        .where((g) => g['id'] == inv['guest_id'])
+                        .firstOrNull;
+              final customer = guest == null
+                  ? '${inv['customer_name'] ?? ''}'
+                  : guestName(guest);
+              final pageFormat = printFormats[format['format']]!;
+              final bytes = payment == null
+                  ? await invoicePdf(
+                      invoice: inv,
+                      hotel: hotel,
+                      customer: customer,
+                      mentions:
+                          settings.firstOrNull?['invoice_mentions'] as String?,
+                      format: pageFormat,
+                    )
+                  : await receiptPdf(
+                      payment: payment,
+                      invoice: inv,
+                      hotel: hotel,
+                      customer: customer,
+                      format: pageFormat,
+                    );
+              return Printing.layoutPdf(
+                format: pageFormat,
+                name: payment == null
+                    ? 'Facture ${inv['number']}'
+                    : 'Reçu ${inv['number']}',
+                onLayout: (_) async => bytes,
+              );
+            }, 'Document envoyé à l\'impression.');
+          }
+
           final manager = role?.canEditIdentity ?? false;
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -262,6 +319,11 @@ class InvoiceScreen extends ConsumerWidget {
                 for (final p in payments)
                   ListTile(
                     dense: true,
+                    trailing: IconButton(
+                      tooltip: 'Imprimer le reçu',
+                      icon: const Icon(Icons.print_outlined),
+                      onPressed: () => printDoc(payment: p),
+                    ),
                     title: Text(
                       '${p['kind'] == 'remboursement' ? 'Remboursement' : 'Paiement'} · '
                       '${paymentMethods[p['method']]} · ${p['amount']} ${p['currency']}',
@@ -303,6 +365,12 @@ class InvoiceScreen extends ConsumerWidget {
                       label: const Text('Valider la facture'),
                     ),
                   ],
+                  if (!draft)
+                    OutlinedButton.icon(
+                      onPressed: printDoc,
+                      icon: const Icon(Icons.print_outlined),
+                      label: const Text('Imprimer la facture'),
+                    ),
                   if (inv['status'] == 'validee') ...[
                     FilledButton.icon(
                       onPressed: pay,
