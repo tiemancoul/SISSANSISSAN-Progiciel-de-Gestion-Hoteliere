@@ -5,7 +5,7 @@ import '../../core/edit_dialog.dart';
 import '../../core/supabase.dart';
 import '../../core/table_data.dart';
 
-const _rooms = ('rooms', 'number');
+const roomsQuery = ('rooms', 'number');
 const _types = ('room_types', 'name');
 const _conference = ('conference_rooms', 'name');
 const _amenities = ('amenities', 'name');
@@ -90,7 +90,7 @@ class RoomsScreen extends ConsumerWidget {
       (
         'Chambres',
         RowsView(
-          query: _rooms,
+          query: roomsQuery,
           empty: 'Aucune chambre. Créez d\'abord une catégorie.',
           itemBuilder: (r) => ListTile(
             leading: const Icon(Icons.bed_outlined),
@@ -101,11 +101,11 @@ class RoomsScreen extends ConsumerWidget {
               '${r['active'] == true ? '' : ' · inactive'}',
             ),
             onTap: canEdit
-                ? () => edit(_rooms, 'Modifier la chambre', roomFields, r)
+                ? () => edit(roomsQuery, 'Modifier la chambre', roomFields, r)
                 : null,
           ),
         ),
-        () => edit(_rooms, 'Nouvelle chambre', roomFields, {
+        () => edit(roomsQuery, 'Nouvelle chambre', roomFields, {
           'status': 'disponible',
           'active': true,
         }),

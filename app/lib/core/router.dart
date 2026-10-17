@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/login_screen.dart';
+import '../features/reservations/guests_screen.dart';
+import '../features/reservations/reservations_screen.dart';
 import '../features/rooms/rooms_screen.dart';
 import '../features/settings/settings_screen.dart';
 import '../features/shell/home_shell.dart';
@@ -18,13 +20,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     ..onDispose(refresh.dispose);
 
   return GoRouter(
-    initialLocation: '/chambres',
+    initialLocation: '/reservations',
     refreshListenable: refresh,
     redirect: (context, state) {
       final loggedIn = ref.read(supabaseProvider).auth.currentSession != null;
       final atLogin = state.matchedLocation == '/connexion';
       if (!loggedIn) return atLogin ? null : '/connexion';
-      if (atLogin) return '/chambres';
+      if (atLogin) return '/reservations';
       return null;
     },
     routes: [
@@ -33,6 +35,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state, child) =>
             HomeShell(location: state.matchedLocation, child: child),
         routes: [
+          GoRoute(
+            path: '/reservations',
+            builder: (_, _) => const ReservationsScreen(),
+          ),
+          GoRoute(path: '/clients', builder: (_, _) => const GuestsScreen()),
           GoRoute(path: '/chambres', builder: (_, _) => const RoomsScreen()),
           GoRoute(
             path: '/utilisateurs',

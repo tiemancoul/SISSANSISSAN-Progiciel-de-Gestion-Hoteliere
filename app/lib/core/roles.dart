@@ -38,6 +38,10 @@ enum AppRole {
 
   bool get canManageUsers => canEditCatalog;
 
+  /// Clients, réservations, arrivées et départs.
+  bool get canManageGuests =>
+      canEditCatalog || this == gerant || this == reception;
+
   /// Rôles qu'un utilisateur de ce rôle peut attribuer.
   List<AppRole> get assignableRoles => switch (this) {
     superAdmin => AppRole.values,

@@ -14,16 +14,17 @@ Le cahier des charges de référence est la version 1.1 (section 18 : décisions
 
 Fait : connexion et mot de passe oublié, 11 rôles, attribution des rôles, identité de l'hôtel,
 règles de séjour, devises et taux, taxes, catégories, chambres, salles de conférence, équipements,
-journal d'audit automatique.
+journal d'audit automatique, clients, réservations (double réservation impossible côté base),
+arrivée et départ avec mise à jour de l'état des chambres.
 
 Pas encore fait : téléversement du logo, tarifs saisonniers, association équipements ↔ catégories,
-puis clients, réservations, disponibilité et la suite des lots.
+calendrier de disponibilité, blocages de chambres par période, puis factures, paiements et caisse.
 
 ## Mise en place de Supabase
 
 1. Dans le projet Supabase, choisir une région Europe (décision D12).
 2. Appliquer les migrations : `supabase link --project-ref <ref>` puis `supabase db push`,
-   ou coller le fichier de `supabase/migrations/` dans l'éditeur SQL.
+   ou coller les fichiers de `supabase/migrations/` dans l'éditeur SQL, dans l'ordre.
 3. Créer votre compte dans Authentication > Users, puis exécuter `supabase/demarrage.sql`.
 4. Les autres comptes apparaissent dans l'écran Utilisateurs, où un administrateur leur attribue un rôle.
 
